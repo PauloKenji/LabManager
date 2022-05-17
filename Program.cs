@@ -1,7 +1,10 @@
 ﻿using Microsoft.Data.Sqlite;
 using LabManager.Database;
+using LabManager.Repositories;
 
 new DatabaseSetup();
+
+var computerRepository = new ComputerRepository(); 
 
 //routing
 var modelName = args[0];
@@ -12,25 +15,11 @@ if(modelName == "Computer")
     if(modelAction == "List")
     {
         Console.WriteLine("Computer List");
-
-        var connection = new SqliteConnection("Data Source = database.db");
-        connection.Open();
-
-        var command = connection.CreateCommand();
-
-        command.CommandText = "SELECT * FROM Computers;";
         
-        var reader = command.ExecuteReader();
-
-        while (reader.Read())
+        foreach (var computer in computerRepository.GetAll())
         {
-            Console.WriteLine(
-                "{0}, {1}, {2}", reader.GetInt32(0), reader.GetString(1), reader.GetString(2)
-            );
+            Console.WriteLine("{0}, {1}, {2}", computer.Id, computer.Ram, computer.Processor);
         }
-
-        reader.Close();
-        connection.Close();
     }
 
     if(modelAction == "New")
@@ -67,10 +56,10 @@ if(modelName == "Laboratory"){
 
     if (modelAction == "List")
     {
-        connection = new SqliteConnection("Data Source = database.db");
+        var connection = new SqliteConnection("Data Source = database.db");
         connection.Open();
 
-        command = connection.CreateCommand();
+        var command = connection.CreateCommand();
 
         command.CommandText = "SELECT * FROM Laboratories";
 
@@ -94,11 +83,11 @@ if(modelName == "Laboratory"){
         var name = args[4];
         var block = args[5];
 
-        connection = new SqliteConnection("Data Source = database.db");
+        var connection = new SqliteConnection("Data Source = database.db");
 
         connection.Open();
 
-        command = connection.CreateCommand();
+        var command = connection.CreateCommand();
 
         command.CommandText = @"
             INSERT INTO Laboratories VALUES($id, $number, $name, $block);
