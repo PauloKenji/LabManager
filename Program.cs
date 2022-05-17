@@ -1,28 +1,8 @@
 ﻿using Microsoft.Data.Sqlite;
+using LabManager.Database;
 
-var connection = new SqliteConnection("Data Source = database.db");
-connection.Open();
+new DatabaseSetup();
 
-var command = connection.CreateCommand();
-
-command.CommandText = @"
-    CREATE TABLE IF NOT EXISTS Computers(
-        id int not null primary key,
-        ram varchar(100) not null,
-        processor varchar(100) not null
-    );
-
-    CREATE TABLE IF NOT EXISTS Laboratories(
-        id int not null primary key,
-        number int not null,
-        name varchar(100) not null,
-        block var not null
-    )
-    
-";
-command.ExecuteNonQuery();
-
-connection.Close();
 //routing
 var modelName = args[0];
 var modelAction = args[1];
@@ -33,10 +13,10 @@ if(modelName == "Computer")
     {
         Console.WriteLine("Computer List");
 
-        connection = new SqliteConnection("Data Source = database.db");
+        var connection = new SqliteConnection("Data Source = database.db");
         connection.Open();
 
-        command = connection.CreateCommand();
+        var command = connection.CreateCommand();
 
         command.CommandText = "SELECT * FROM Computers;";
         
@@ -62,10 +42,10 @@ if(modelName == "Computer")
         Console.WriteLine("Computer New");
         Console.WriteLine("{0}, {1}, {2}", id, ram, processor);
 
-        connection = new SqliteConnection("Data Source = database.db");
+        var connection = new SqliteConnection("Data Source = database.db");
         connection.Open();
 
-        command = connection.CreateCommand();
+        var command = connection.CreateCommand();
 
         command.CommandText = "INSERT INTO Computers VALUES($id, $ram, $processor);";
         command.Parameters.AddWithValue("$id", id);
