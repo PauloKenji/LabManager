@@ -3,16 +3,19 @@ using Microsoft.Data.Sqlite;
 namespace LabManager.Database;
 
 class DatabaseSetup
-{
-    public DatabaseSetup()
+{   
+    private DatabaseConfig databaseConfig;
+
+    public DatabaseSetup(DatabaseConfig databaseConfig)
     {
+        this.databaseConfig = databaseConfig;
         CreateTableComputer();
         CreateTableLab();
     }
 
     private void CreateTableComputer()
     {
-        var connection = new SqliteConnection("Data Source = database.db");
+        var connection = new SqliteConnection(databaseConfig.ConnectionString);
         connection.Open();
 
         var command = connection.CreateCommand();
@@ -31,7 +34,7 @@ class DatabaseSetup
 
     private void CreateTableLab()
     {
-        var connection = new SqliteConnection("Data Source = database.db");
+        var connection = new SqliteConnection(databaseConfig.ConnectionString);
         connection.Open();
 
         var command = connection.CreateCommand();

@@ -4,38 +4,37 @@ using Microsoft.Data.Sqlite;
 
 namespace LabManager.Repositories;
 
-class ComputerRepository
+class LaboratoryRepository
 {
     private DatabaseConfig databaseConfig;
 
-    public ComputerRepository(DatabaseConfig databaseConfig) => this.databaseConfig = databaseConfig;
-  
+    public LaboratoryRepository(DatabaseConfig databaseConfig) => this.databaseConfig = databaseConfig;
 
-    public List<Computer> GetAll()
-    {
-        var Computers = new List<Computer>();
+    public List<Laboratory> GetAll(){
+        var laboratories = new List<Laboratory>();
 
         var connection = new SqliteConnection(databaseConfig.ConnectionString);
         connection.Open();
 
         var command = connection.CreateCommand();
 
-        command.CommandText = "SELECT * FROM Computers;";
+        command.CommandText = "SELECT * FROM Laboratories;";
         
         var reader = command.ExecuteReader();
 
         while (reader.Read())
         {   
-            var computer = new Computer(
+            var laboratory = new Laboratory(
                 reader.GetInt32(0), 
-                reader.GetString(1), 
-                reader.GetString(2)
+                reader.GetInt32(1), 
+                reader.GetString(2),
+                reader.GetChar(3)
             );
 
-            Computers.Add(computer);            
+            laboratories.Add(laboratory);            
         }
         connection.Close();
 
-        return Computers;
+        return laboratories;
     }
 }

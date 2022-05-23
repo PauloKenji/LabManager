@@ -2,9 +2,12 @@
 using LabManager.Database;
 using LabManager.Repositories;
 
-new DatabaseSetup();
+var databaseConfig = new DatabaseConfig();
 
-var computerRepository = new ComputerRepository(); 
+new DatabaseSetup(databaseConfig);
+
+var computerRepository = new ComputerRepository(databaseConfig); 
+var laboratoryRepository = new LaboratoryRepository(databaseConfig);
 
 //routing
 var modelName = args[0];
@@ -31,7 +34,7 @@ if(modelName == "Computer")
         Console.WriteLine("Computer New");
         Console.WriteLine("{0}, {1}, {2}", id, ram, processor);
 
-        var connection = new SqliteConnection("Data Source = database.db");
+        var connection = new SqliteConnection(databaseConfig.ConnectionString);
         connection.Open();
 
         var command = connection.CreateCommand();
@@ -46,34 +49,18 @@ if(modelName == "Computer")
         connection.Close();
     }
 
-    if(modelAction == "Delete")
-    {
-        Console.WriteLine("Computer Delete");
-    }
 }
 
 if(modelName == "Laboratory"){
 
     if (modelAction == "List")
     {
-        var connection = new SqliteConnection("Data Source = database.db");
-        connection.Open();
+       Console.WriteLine("Laboratory List");
 
-        var command = connection.CreateCommand();
-
-        command.CommandText = "SELECT * FROM Laboratories";
-
-        var reader = command.ExecuteReader();
-
-        while (reader.Read())
-        {
-            Console.WriteLine(
-                "{0},{1},{2},{3}",reader.GetInt32(0),reader.GetInt32(1),reader.GetString(2),reader.GetChar(3)
-            );
-        }
-
-        reader.Close();
-        connection.Close();
+       foreach (var laboratory in laboratoryRepository.GetAll())
+       {
+           Console.WriteLine("{0}, {1}, {2}, {3}", laboratory.Id, laboratory.Number, laboratory.Name, laboratory.Block);
+       }
     }
 
     if (modelAction == "New")
@@ -83,7 +70,7 @@ if(modelName == "Laboratory"){
         var name = args[4];
         var block = args[5];
 
-        var connection = new SqliteConnection("Data Source = database.db");
+        var connection = new SqliteConnection(databaseConfig.ConnectionString);
 
         connection.Open();
 
