@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
 using LabManager.Database;
 using LabManager.Repositories;
+using LabManager.Models;
 
 var databaseConfig = new DatabaseConfig();
 
@@ -34,19 +35,8 @@ if(modelName == "Computer")
         Console.WriteLine("Computer New");
         Console.WriteLine("{0}, {1}, {2}", id, ram, processor);
 
-        var connection = new SqliteConnection(databaseConfig.ConnectionString);
-        connection.Open();
-
-        var command = connection.CreateCommand();
-
-        command.CommandText = "INSERT INTO Computers VALUES($id, $ram, $processor);";
-        command.Parameters.AddWithValue("$id", id);
-        command.Parameters.AddWithValue("$ram", ram);
-        command.Parameters.AddWithValue("$processor", processor);
-        
-        command.ExecuteNonQuery();
-
-        connection.Close();
+        var computer = new Computer(id, ram, processor);
+        computerRepository.Save(computer);
     }
 
 }
@@ -68,24 +58,9 @@ if(modelName == "Laboratory"){
         var id = Convert.ToInt32(args[2]);
         var number = Convert.ToInt32(args[3]);
         var name = args[4];
-        var block = args[5];
+        var block = char.Parse(args[5]);
 
-        var connection = new SqliteConnection(databaseConfig.ConnectionString);
-
-        connection.Open();
-
-        var command = connection.CreateCommand();
-
-        command.CommandText = @"
-            INSERT INTO Laboratories VALUES($id, $number, $name, $block);
-        ";
-        command.Parameters.AddWithValue("$id",id);
-        command.Parameters.AddWithValue("$number",number);
-        command.Parameters.AddWithValue("$name",name);
-        command.Parameters.AddWithValue("$block",block);
-
-        command.ExecuteNonQuery();
-
-        connection.Close();
+        var laboratory = new Laboratory(id,number,name,block);
+        laboratoryRepository.save(laboratory);
     }
 }
