@@ -37,4 +37,25 @@ class LaboratoryRepository
 
         return laboratories;
     }
+
+    public void save(Laboratory laboratory){
+
+        var connection = new SqliteConnection(databaseConfig.ConnectionString);
+
+        connection.Open();
+
+        var command = connection.CreateCommand();
+
+        command.CommandText = @"
+            INSERT INTO Laboratories VALUES($id, $number, $name, $block);
+        ";
+        command.Parameters.AddWithValue("$id",laboratory.Id);
+        command.Parameters.AddWithValue("$number",laboratory.Number);
+        command.Parameters.AddWithValue("$name",laboratory.Name);
+        command.Parameters.AddWithValue("$block",laboratory.Block);
+
+        command.ExecuteNonQuery();
+
+        connection.Close();
+    }
 }
