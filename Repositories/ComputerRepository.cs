@@ -69,7 +69,7 @@ class ComputerRepository
         connection.Close();
     }
 
-    public void Update(Computer computer){
+    public Computer Update(Computer computer){
         var connection = new SqliteConnection(databaseConfig.ConnectionString);
         connection.Open();
 
@@ -90,6 +90,8 @@ class ComputerRepository
 
             command.ExecuteNonQuery();
             connection.Close();
+
+        return computer;
     }
 
     public Computer GetById(int id){        
